@@ -8,12 +8,12 @@ function hideMenus() {
 var button;
 if (button = document.getElementById("button-play1")) {
     button.addEventListener('click', function (event) {
-        current_level = levels[2];
+        current_level = levels[0];
         startGame();
     }, false);
 
     button.addEventListener('mouseover', function (event) {
-        current_level = levels[2];
+        current_level = levels[0];
         load_level()
     }, false);
 }
@@ -32,24 +32,24 @@ if (button = document.getElementById("button-play2")) {
 
 if (button = document.getElementById("button-play3")) {
     button.addEventListener('click', function (event) {
-        current_level = levels[1];
+        current_level = levels[0];
         startGame();
     }, false);
 
     button.addEventListener('mouseover', function (event) {
-        current_level = levels[1];
+        current_level = levels[0];
         load_level()
     }, false);
 }
 
 if (button = document.getElementById("button-play4")) {
     button.addEventListener('click', function (event) {
-        current_level = levels[3];
+        current_level = levels[0];
         startGame();
     }, false);
 
     button.addEventListener('mouseover', function (event) {
-        current_level = levels[3];
+        current_level = levels[0];
         load_level()
     }, false);
 }

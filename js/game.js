@@ -9,7 +9,7 @@ var debug = false;
 
 // default theme and level
 var theme = 'suse'
-var current_level = levels[1];
+var current_level = levels[0];
 
 var gameInterval;
 var score
