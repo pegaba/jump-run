@@ -5,12 +5,12 @@ var levels = [
         background: '#8d8bb3',
         template:[
             "                                                                                              ",
-            "                                                                                              ",
-            "                                                                                              ",
-            "                                                                                              ",
-            "                                                                                              ",
-            "                                                                                              ",
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            "                    x   p    x                                                                   ",
+            "                xxxxxxxxxxxxx                                                                              ",
+            "          xxx                                                                                    ",
+            "    xxx                                                                                       ",
+            "                            ppp           xx                                ppppppp            ",
+            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         ]
     }
 ];

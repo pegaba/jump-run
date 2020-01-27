@@ -5,7 +5,7 @@ var ticks = 0;
 var spriteMap = new Image;
 var actors;
 var items;
-var debug = false;
+var debug = true;
 
 // default theme and level
 var theme = 'suse'
@@ -32,8 +32,8 @@ var frameTime = 0, lastLoop = new Date, thisLoop;
 // speed, gravity parameters
 var speed = {
     player:{
-        velocity_x:1.5,
-        velocity_x_jump:1.5,
+        velocity_x:2.5,
+        velocity_x_jump:2.5,
         velocity_y:25,
         gravity:2,
         friction:0.8,

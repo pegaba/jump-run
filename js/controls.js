@@ -36,7 +36,8 @@ function registerControls() {
                 held.left = true;
                 break;
             case 32: // space
-                held.up = true;
+                // held.up = true;
+                held.fire = true;
                 break;
             case 38: // up
                 held.up = true;
@@ -62,7 +63,7 @@ function registerControls() {
                 held.left = false;
                 break;
             case 32: // space
-                held.up = false;
+                held.fire = false;
                 break;
             case 38: // up
                 held.up = false;

@@ -7,10 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 
-    <title>Geeko Run</title>
+    <title>Galaxy Fighter</title>
 
     <link href="css/game.css" rel="stylesheet" type="text/css">
-    <link href="css/pad-controls.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
@@ -23,20 +22,12 @@
     <div id="game-menu" class="game-info">
 
         <div class="menu-item menu-text" id="intro">
-            <p>Welcome to the Geeko run!</p>
+            <p>Überlebe in der Galaxy</p>
         </div>
 
-        <div class="menu-item menu-link" id="button-play3">
+        <div class="menu-item menu-link" id="button-play">
             SUSE Geeko run
         </div>
-        <!-- <div class="menu-item menu-link" id="button-play4">
-            The SCC Jungle
-        </div> -->
-
-        <div class="menu-item menu-text" id="help">
-            <p>Please use your arrow keys or pad controls to play.</p>
-        </div>
-
     </div>
 
     <div id="game-over" class="game-info">
@@ -68,12 +59,12 @@
 
 
 <!-- don't forget the charset here, else the levels will be parsed incorrectly -->
-<script type="text/javascript" src="js/menu.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/levels.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/level_methods.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/game.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/galaxy/menu.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/galaxy/levels.js" charset="utf-8"></script>
+<!-- <script type="text/javascript" src="js/level_methods.js" charset="utf-8"></script> -->
+<script type="text/javascript" src="js/galaxy/game2.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/controls.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/sounds.js" charset="utf-8"></script>
+<!--<script type="text/javascript" src="js/sounds.js" charset="utf-8"></script> -->
 
 
 <!-- <a href="https://github.com/digitaltom/jump-run" id="github-fork-me">
@@ -81,10 +72,10 @@
          src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
 alt="Fork me on GitHub"></a> -->
 
-<img src="themes/suse/images/game_tiles.png" width="0" height="0"/>
-<img src="themes/suse/images/player_sprites.png" width="0" height="0"/>
+<img src="themes/galaxy/simple/images/game_tiles.png" width="0" height="0"/>
+<img src="themes/galaxy/simple/images/player_sprites.png" width="0" height="0"/>
 
-<script type="text/javascript">document.addEventListener("DOMContentLoaded", function(event) { load_level() })</script>
+<script type="text/javascript">document.addEventListener("DOMContentLoaded", function(event) { vorbereitungen() })</script>
 
 </body>
 </html>

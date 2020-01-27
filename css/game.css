@@ -14,13 +14,14 @@ html, body {
 }
 
 body {
-    background-color: #000000;
+    background-color: #ffffff;
     overflow: hidden;
 }
 
 #game {
     display: block;
     margin: 0 auto;
+    border: 2px solid red;
 }
 
 #game-container {
