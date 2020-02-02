@@ -3,7 +3,13 @@ var ctx = canvas.getContext("2d");
 
 var debug = true;
 
-var hintergrundbild = new Image();
+
+
+
+
+
+
+// var hintergrundbild = new Image();
 
 var gameInterval;
 var ticks = 0;
@@ -65,24 +71,50 @@ function vorbereitungen() {
 }
 
 function gameLoop() {
-    ticks++;
-    if (ticks % 100 == 0) {
-        console.log(ticks);
-        addEnemyUfo();
-    }
+    updateTick();
+    
+    checkCollision();  // todo
+    bewegeSpieler();  // prüfe Spieler Interaktionen
+
+    pruefeGegnerStatus();
+    berechneObjektpositionen();
+
+    berechneActorAktionen();
+
+    zeichneBild();
+
+
+    // updateCharacters();
+    // berechneSpielerposition();
+    /// berechneActorPositionen();
+    // console.log(ticks);
+    // console.log(held);
+    // zeichneBild();
+}
+
+/**
+ * basic function for tick 
+ */
+function updateTick(){
+    ticks++
 
     var thisFrameTime = (thisLoop = new Date) - lastLoop;
     frameTime += (thisFrameTime - frameTime) / filterStrength;
     lastLoop = thisLoop;
-    updateCharacters();
-    berechneSpielerposition();
-    berechneActorPositionen();
-    // console.log(ticks);
-    // console.log(held);
-    zeichneBild();
 }
 
-function updateCharacters() {
+/**
+ *  prüfen ob Schiffe getroffen werden
+ *  TODO
+ */
+function checkCollision(){
+
+}
+
+/**
+ * mach etwas, wenn der Spieler eine Taste drückt
+ */
+function bewegeSpieler(){
     spieler.speed.x = 0;
     spieler.speed.y = 0;
     if (held.left) {
@@ -101,6 +133,32 @@ function updateCharacters() {
         held.fire = false;
         fireShot();
     }
+}
+
+function pruefeGegnerStatus(){
+    for(var i = enemyActors.length - 1; i > 0; i++){
+        var e = enemyActors[i];
+
+        if(e.remove){
+            enemyActors.splice(i,1);
+        }
+
+        if(e.status == 0){
+            
+        }
+    }
+
+    if(enemyActors.length == 0){
+        // get next wave
+    }
+}
+
+function berechneObjektpositionen(){
+    //
+}
+
+function berechneActorAktionen(){
+
 }
 
 function berechneSpielerposition() {

@@ -6,15 +6,14 @@ function hideMenus() {
 // Main menu
 
 var button;
-if (button = document.getElementById("button-play1")) {
+if (button = document.getElementById("play-level-1")) {
     button.addEventListener('click', function (event) {
-        current_level = levels[0];
-        startGame();
+        startGame(0);
     }, false);
 
     button.addEventListener('mouseover', function (event) {
-        current_level = levels[0];
-        load_level()
+        //current_level = levels[0];
+        //load_level()
     }, false);
 }
 
