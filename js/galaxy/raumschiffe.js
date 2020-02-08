@@ -45,6 +45,10 @@ class Laserschuss {
     pruefeStatus = function(){
         if(this.Ort.y < -100)
             this.Status = -1;
+        if(this.Ort.y > 1000)
+            this.Status = -1;
     }
-
+    schiessen = function(){
+        return null;
+    }
 }

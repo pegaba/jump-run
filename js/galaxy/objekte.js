@@ -13,15 +13,32 @@ class Ufo01 {
     Starttick = 0
     WellePos = 0
     Status = 0
+    LetzterSchussTick = 0;
+    Schussabstand = 40;
+
     bewegen = function () {
-        if (this.Ort.x < (200 + (this.WellePos * 50)))
+        var x_soll = 84 + (this.WellePos % 5) * 100;
+        var y_soll = 50 + (this.WellePos % 2) * 100;
+
+        if (this.Ort.x < x_soll)
             this.Ort.x += this.Geschwindigkeit.x;
-        if (this.Ort.y < 100)
+        if (this.Ort.y < y_soll)
             this.Ort.y += this.Geschwindigkeit.y;
     }
 
     schiessen = function () {
-
+        if (this.LetzterSchussTick + this.Schussabstand < ticks) {
+            this.LetzterSchussTick = ticks;
+            var schuss = new Laserschuss();
+            schuss.Bild.spriteMap.src = schuss.Bildquelle;
+            schuss.Ort.x = this.Ort.x
+            schuss.Ort.y = this.Ort.y + 50;
+         schuss.Geschwindigkeit.y *=-0,5;
+            return schuss;
+        }
+        else{
+            return null;
+        }
     }
 
     pruefeStatus = function () {
@@ -68,5 +85,8 @@ class Boom {
     pruefeStatus = function () {
         if (this.Animationszahler < 0)
             this.Status = -1
+    }
+    schiessen() {
+        return null;
     }
 }

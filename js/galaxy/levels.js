@@ -6,9 +6,9 @@ var levels = [
         Gruppen:[
             {
                 Gegner: "Ufo_01",
-                Anzahl: 2,
-                Start: 200,
-                Pause: 25,
+                Anzahl: 10,
+                Start: 100,
+                Pause: 15,
                 StopTick: 0
             },
             {

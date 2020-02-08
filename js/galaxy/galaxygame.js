@@ -150,6 +150,11 @@ function bewegeDinge() {
         var ding = _Dinge[i];
         if (ding.Starttick < ticks) {
             ding.bewegen();
+            var schuss = ding.schiessen();
+            if (schuss) {
+                _Dinge.push(schuss);
+            }
+
         }
     }
 }
@@ -173,7 +178,7 @@ function pruefeTreffer() {
                 if (ge.Ort.y < m.Ort.y &&
                     ge.Ort.y + ge.Bild.target_size.y > m.Ort.y) {
                     var e = ge.getroffen(m);
-                    if(e){
+                    if (e) {
                         _Dinge.push(e);
                     }
                     m.Status = -1;
