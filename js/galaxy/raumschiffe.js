@@ -11,14 +11,18 @@ var schiffe = [
         Schussabstand: 10,
         Leben: 25000,
         schiessen: function (ort) {
-            var korr1 = 7;
-            var korr2 = 24
-            var ls = new Laserschuss();
-            ls.Bild.spriteMap.src = ls.Bildquelle;
-            ls.Ort.y = ort.y;
-            ls.Ort.x = ort.x - 1 + (this.Rohr == 1 ? korr1 : korr2);
-            this.Rohr *= -1;
-            return ls;
+            var r1 =[3,21]
+            var r2 =[6,21]
+            var r3 =[57,21]
+            var r4 =[60,21]
+
+            var s=[]
+            s.push(erstelleschuss(ort, r1));
+            s.push(erstelleschuss(ort, r2));
+            s.push(erstelleschuss(ort, r3));
+            s.push(erstelleschuss(ort, r4));
+            
+            return s;
         },
         Rohr: 1
     }
@@ -38,17 +42,26 @@ class Laserschuss {
     Schaden = 1000
     Starttick = 0
     Status = 0
-    bewegen = function(){
+    bewegen = function () {
         this.Ort.x += this.Geschwindigkeit.x;
         this.Ort.y += this.Geschwindigkeit.y;
     }
-    pruefeStatus = function(){
-        if(this.Ort.y < -100)
+    pruefeStatus = function () {
+        if (this.Ort.y < -100)
             this.Status = -1;
-        if(this.Ort.y > 1000)
+        if (this.Ort.y > 1000)
             this.Status = -1;
     }
-    schiessen = function(){
+    schiessen = function () {
         return null;
     }
+}
+
+erstelleschuss = function (ort, korr) {
+    var ls = new Laserschuss();
+    ls.Bild.spriteMap.src = ls.Bildquelle;
+    ls.Ort.y = ort.y + korr[1];
+    ls.Ort.x = ort.x + korr[0];
+
+    return ls;
 }

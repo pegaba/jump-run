@@ -33,7 +33,7 @@ class Ufo01 {
             schuss.Bild.spriteMap.src = schuss.Bildquelle;
             schuss.Ort.x = this.Ort.x
             schuss.Ort.y = this.Ort.y + 50;
-         schuss.Geschwindigkeit.y *=-0,5;
+         schuss.Geschwindigkeit.y *=-0.5;
             return schuss;
         }
         else{

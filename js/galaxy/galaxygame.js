@@ -134,7 +134,7 @@ function bewegeSpieler() {
     if (held.fire) {
         if (ticks >= _Spieler.NaechsterSchussTick) {
             var schuss = _Spieler.Raumschiff.schiessen(_Spieler.Ort)
-            _Dinge.push(schuss);
+            _Dinge = _Dinge.concat(schuss);
             _Spieler.NaechsterSchussTick = (ticks + _Spieler.Raumschiff.Schussabstand);
         }
 
