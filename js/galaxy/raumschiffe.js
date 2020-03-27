@@ -9,7 +9,7 @@ var schiffe = [
         },
         Geschwindigkeit: { x: 10, y: 10 },
         Schussabstand: 10,
-        Leben: 1,
+        Leben: 25000,
         schiessen: function (ort) {
             var korr1 = 7;
             var korr2 = 24

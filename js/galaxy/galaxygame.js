@@ -241,8 +241,20 @@ function zeichneBild() {
             ding.Bild.target_size.y
 
         );
-    })
-}
+    });
+
+    // zeichne Anzeige
+    ctx.beginPath();
+    ctx.moveTo(600,1);
+      ctx.lineTo(600,800);
+      ctx.stroke();
+    }
+    var leben = new Image();
+    leben.src = "themes/galaxy/simple/images/game_tiles.png";
+    ctx.drawImage(
+        leben,
+        1,17,16,16,650,750,25,25
+    )
 
 /**
  * wählt ein Schiff aus der Schiffliste
