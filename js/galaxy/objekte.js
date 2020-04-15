@@ -27,9 +27,13 @@ class Ufo01 {
     }
 
     schiessen = function () {
+        if(_Game.Status != 'running'){
+            return;
+        }
         if (this.LetzterSchussTick + this.Schussabstand < ticks) {
             this.LetzterSchussTick = ticks;
             var schuss = new Laserschuss();
+            schuss.Typ = 'AlienMunition';
             schuss.Bild.spriteMap.src = schuss.Bildquelle;
             schuss.Ort.x = this.Ort.x
             schuss.Ort.y = this.Ort.y + 50;

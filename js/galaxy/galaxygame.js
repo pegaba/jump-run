@@ -10,15 +10,33 @@ var _Brett = {};
 var _Game = {
     AktuelleWelle: [],
     Status: "menu",
-    Level: {}
+    Level: {},
+    Status: 'Menu'
 }
 
 var _Spieler = {
     Raumschiff: {},
+    Bild: '',
     Ort: { x: 0, y: 0 },
     AkutelleGeschwindigkeit: { x: 0, y: 0 },
     Leben: 1,
-    NaechsterSchussTick: 0
+    NaechsterSchussTick: 0,
+    getroffen: function (schuss) {
+        if (this.Leben <= 0)
+            return;
+
+        this.Leben -= schuss.Schaden;
+
+        if (this.Leben <= 0) {
+            gameover();
+            var b = new Boom();
+            b.Bild.spriteMap.src = b.Bildquelle;
+            b.Ort.x = this.Ort.x
+            b.Ort.y = this.Ort.y
+            return b;
+        }
+
+    }
 }
 
 var _Dinge = [];
@@ -46,12 +64,14 @@ function startGame(idx) {
     selectSpielerschiff(0);
     window.clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 30);
+    _Game.Status = 'running';
 }
 
 /**
  * Diese Methode erneuert das Bild und berechnet die Positionen
  */
 function gameLoop() {
+
     updateTick();
     pruefeGruppen();
 
@@ -101,6 +121,10 @@ function pruefeGruppen() {
  * prüfen ob der Spieler irgendwelche Tasten gedrückt hat
  */
 function bewegeSpieler() {
+    if (_Game.Status != 'running') {
+        return;
+    }
+
     _Spieler.AkutelleGeschwindigkeit.x = 0;
     _Spieler.AkutelleGeschwindigkeit.y = 0;
     if (held.left) {
@@ -123,12 +147,12 @@ function bewegeSpieler() {
     // Pruefen dass der Spieler nicht aus dem Brett fliegt
     if (_Spieler.Ort.x <= 0)
         _Spieler.Ort.x = 0;
-    if (_Spieler.Ort.x >= _Brett.Groesse.x - _Spieler.Raumschiff.Bild.target_size.x)
-        _Spieler.Ort.x = _Brett.Groesse.x - _Spieler.Raumschiff.Bild.target_size.x;
+    if (_Spieler.Ort.x >= _Brett.Groesse.x - _Spieler.Bild.target_size.x)
+        _Spieler.Ort.x = _Brett.Groesse.x - _Spieler.Bild.target_size.x;
     if (_Spieler.Ort.y <= 0)
         _Spieler.Ort.y = 0;
-    if (_Spieler.Ort.y >= _Brett.Groesse.y - _Spieler.Raumschiff.Bild.target_size.y)
-        _Spieler.Ort.y = _Brett.Groesse.y - _Spieler.Raumschiff.Bild.target_size.y;
+    if (_Spieler.Ort.y >= _Brett.Groesse.y - _Spieler.Bild.target_size.y)
+        _Spieler.Ort.y = _Brett.Groesse.y - _Spieler.Bild.target_size.y;
 
     // Spieler will schiessen
     if (held.fire) {
@@ -163,31 +187,40 @@ function bewegeDinge() {
  * Ist irgendetwas getroffen worden?
  */
 function pruefeTreffer() {
-    var muni = _Dinge.filter((m) => { return m.Typ == "Munition" });
+    var muni = _Dinge.filter((m) => { return m.Typ == "PlayerMunition" });
     var gegn = _Dinge.filter((g) => { return g.Typ == "Gegner" });
 
+    // prüfe alle Gegner mit allen Projektile
     gegn.forEach((ge) => {
         muni.forEach((m) => {
-            // nicht mal in der Nähe -> weiter
-            if (ge.Ort.x - 10 > m.Ort.x)
-                return;
-
-            // schon mal in der gleichen Spalte
-            if (ge.Ort.x < m.Ort.x &&
-                ge.Ort.x + ge.Bild.target_size.x > m.Ort.x) {
-                if (ge.Ort.y < m.Ort.y &&
-                    ge.Ort.y + ge.Bild.target_size.y > m.Ort.y) {
-                    var e = ge.getroffen(m);
-                    if (e) {
-                        _Dinge.push(e);
-                    }
-                    m.Status = -1;
-                }
-            }
-
+            IstGetroffen(m, ge);
         });
     });
 
+    // pruefe Spieler mit allen Projektilen
+    muni = _Dinge.filter((m)=> {return m.Typ == "AlienMunition"});
+    muni.forEach((m) => {
+        IstGetroffen(m, _Spieler);
+    });
+}
+
+function IstGetroffen(schuss, schiff) {
+    // nicht mal in der Nähe -> weiter
+    if (schiff.Ort.x - 10 > schuss.Ort.x)
+        return;
+
+    // schon mal in der gleichen Spalte
+    if (schiff.Ort.x < schuss.Ort.x &&
+        schiff.Ort.x + schiff.Bild.target_size.x > schuss.Ort.x) {
+        if (schiff.Ort.y < schuss.Ort.y &&
+            schiff.Ort.y + schiff.Bild.target_size.y > schuss.Ort.y) {
+            var e = schiff.getroffen(schuss);
+            if (e) {
+                _Dinge.push(e);
+            }
+            schuss.Status = -1;
+        }
+    }
 }
 
 /**
@@ -211,18 +244,20 @@ function zeichneBild() {
     ctx.clearRect(0, 0, _Brett.Groesse.x, _Brett.Groesse.y);
 
     // zeichne Raumschiff
-    ctx.drawImage(
-        _Spieler.Raumschiff.Bild.spriteMap,
-        _Spieler.Raumschiff.Bild.sprite.x,
-        _Spieler.Raumschiff.Bild.sprite.y,
-        _Spieler.Raumschiff.Bild.source_size.x,
-        _Spieler.Raumschiff.Bild.source_size.y,
-        _Spieler.Ort.x,
-        _Spieler.Ort.y,
-        _Spieler.Raumschiff.Bild.target_size.x,
-        _Spieler.Raumschiff.Bild.target_size.y
+    if (_Game.Status == 'running') {
+        ctx.drawImage(
+            _Spieler.Bild.spriteMap,
+            _Spieler.Bild.sprite.x,
+            _Spieler.Bild.sprite.y,
+            _Spieler.Bild.source_size.x,
+            _Spieler.Bild.source_size.y,
+            _Spieler.Ort.x,
+            _Spieler.Ort.y,
+            _Spieler.Bild.target_size.x,
+            _Spieler.Bild.target_size.y
 
-    );
+        );
+    }
 
     // zeichne alle Dinge
     _Dinge.forEach(function (ding) {
@@ -245,16 +280,16 @@ function zeichneBild() {
 
     // zeichne Anzeige
     ctx.beginPath();
-    ctx.moveTo(600,1);
-      ctx.lineTo(600,800);
-      ctx.stroke();
-    }
-    var leben = new Image();
-    leben.src = "themes/galaxy/simple/images/game_tiles.png";
-    ctx.drawImage(
-        leben,
-        1,17,16,16,650,750,25,25
-    )
+    ctx.moveTo(600, 1);
+    ctx.lineTo(600, 800);
+    ctx.stroke();
+}
+var leben = new Image();
+leben.src = "themes/galaxy/simple/images/game_tiles.png";
+ctx.drawImage(
+    leben,
+    1, 17, 16, 16, 650, 750, 25, 25
+)
 
 /**
  * wählt ein Schiff aus der Schiffliste
@@ -262,7 +297,15 @@ function zeichneBild() {
  */
 function selectSpielerschiff(idx) {
     Object.assign(_Spieler.Raumschiff, schiffe[idx]);
-    _Spieler.Raumschiff.Bild.spriteMap.src = _Spieler.Raumschiff.Bildquelle;
-    _Spieler.Ort.x = (_Brett.Groesse.x / 2) - (_Spieler.Raumschiff.Bild.target_size.x / 2)
+    _Spieler.Bild = _Spieler.Raumschiff.Bild;
+    _Spieler.Leben = _Spieler.Raumschiff.Leben;
+    _Spieler.Bild.spriteMap.src = _Spieler.Raumschiff.Bildquelle;
+    _Spieler.Ort.x = (_Brett.Groesse.x / 2) - (_Spieler.Bild.target_size.x / 2)
     _Spieler.Ort.y = (_Brett.Groesse.y - 50)
+}
+
+function gameover() {
+    showGameOver();
+
+    _Game.Status = 'gameover';
 }

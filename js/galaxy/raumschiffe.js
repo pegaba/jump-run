@@ -9,7 +9,7 @@ var schiffe = [
         },
         Geschwindigkeit: { x: 10, y: 10 },
         Schussabstand: 10,
-        Leben: 25000,
+        Leben: 5000,
         schiessen: function (ort) {
             var r1 =[3,21]
             var r2 =[6,21]
@@ -59,6 +59,7 @@ class Laserschuss {
 
 erstelleschuss = function (ort, korr) {
     var ls = new Laserschuss();
+    ls.Typ = "PlayerMunition";
     ls.Bild.spriteMap.src = ls.Bildquelle;
     ls.Ort.y = ort.y + korr[1];
     ls.Ort.x = ort.x + korr[0];
