@@ -20,3 +20,16 @@ var levels = [
         ]
     }
 ];
+
+class Level {
+    name= ''
+    theme= ''
+    background = '';
+    Gruppen = [];
+}
+
+function GetLevel(idx){
+    var l = levels[idx];
+    var lev = new Level();
+    return Object.assign(lev, JSON.parse(JSON.stringify(l)));
+}

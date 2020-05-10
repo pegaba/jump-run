@@ -10,7 +10,7 @@ function is_touch_device() {
 }
 
 function preventDefault(event) {
-  event.preventDefault();
+    event.preventDefault();
 }
 
 // prevent scrolling etc
@@ -48,6 +48,11 @@ function registerControls() {
             case 40: // down
                 held.down = true;
                 break;
+            case 86:
+                held.v = true;
+                break;
+
+
             case 27: // escape
                 initGame()
             default:
@@ -73,6 +78,9 @@ function registerControls() {
                 break;
             case 40: // down
                 held.down = false;
+                break;
+            case 86:
+                held.v = false;
                 break;
             default:
                 return;

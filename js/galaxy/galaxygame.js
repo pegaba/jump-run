@@ -55,16 +55,35 @@ function ladeSpiel() {
     hideMenus();
     registerControls();
     showStartMenu();
+    _Dinge = [];
+    _Game = {
+        AktuelleWelle: [],
+        Status: "menu",
+        Level: {},
+        Status: 'Menu'
+    };
 }
 
 function startGame(idx) {
     console.log('starte level 0');
-    _Game.Level = levels[idx];
+    _Game.Level =  GetLevel(idx);
     hideMenus();
     selectSpielerschiff(0);
     window.clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 30);
     _Game.Status = 'running';
+}
+
+function restartGame(){
+    console.log('Restart');
+    _Dinge = [];
+    _Game = {
+        AktuelleWelle: [],
+        Status: "menu",
+        Level: {},
+        Status: 'Menu'
+    };
+    startGame(0);
 }
 
 /**
@@ -104,6 +123,10 @@ function pruefeGruppen() {
 
     if (idx == -1) {
         var w = [];
+        if(_Game.Level.Gruppen.length == 0){
+            zeigeSiegerBild();
+        }
+
         w = _Game.Level.Gruppen[0]
         _Game.Level.Gruppen.splice(0, 1);
 
@@ -161,7 +184,15 @@ function bewegeSpieler() {
             _Dinge = _Dinge.concat(schuss);
             _Spieler.NaechsterSchussTick = (ticks + _Spieler.Raumschiff.Schussabstand);
         }
+    }
 
+    // Spieler will Rakette abschiessen
+    if(held.v){
+        if(_Spieler.Raumschiff.raketteBereit(ticks)){
+            var rakette = _Spieler.Raumschiff.schiesseRakette(_Spieler.Ort, ticks)
+            _Dinge = _Dinge.concat(rakette);
+            _Spieler.RaketteBereitTick = (ticks + _Spieler.Raumschiff.RaketteLadenZeit)
+        }
     }
 
 }
@@ -176,7 +207,7 @@ function bewegeDinge() {
             ding.bewegen();
             var schuss = ding.schiessen();
             if (schuss) {
-                _Dinge.push(schuss);
+                _Dinge = _Dinge.concat(schuss);
             }
 
         }
@@ -279,6 +310,13 @@ function zeichneBild() {
     });
 
     // zeichne Anzeige
+    // übermale Anzeigebereich weiss
+    ctx.beginPath();
+    ctx.rect(600, 1, 800, 800);
+    ctx.fillStyle = "white";
+    ctx.fillRect(600,1,200,800);
+    ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(600, 1);
     ctx.lineTo(600, 800);

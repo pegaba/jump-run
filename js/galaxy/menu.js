@@ -1,6 +1,7 @@
 function hideMenus() {
     hideStartMenu()
     hideGameOver()
+    hideSiegerBild()
 }
 
 // Main menu
@@ -73,8 +74,8 @@ document.getElementById("button-restart").addEventListener('click', function (ev
 }, false);
 
 document.getElementById("button-menu").addEventListener('click', function (event) {
-    initGame()
-    showStartMenu()
+    ladeSpiel();
+    //showStartMenu()
 }, false);
 
 var gameover_menu = document.getElementById("game-over");
@@ -86,4 +87,15 @@ function showGameOver() {
 
 function hideGameOver() {
     gameover_menu.style.visibility = "hidden";
+}
+
+var winner_menu = document.getElementById("winner-screen");
+
+function zeigeSiegerBild(){
+    _Game.Status = 'Sieg';
+    winner_menu.style.visibility = "visible";
+}
+
+function hideSiegerBild(){
+    winner_menu.style.visibility = "hidden";
 }

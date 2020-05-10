@@ -32,13 +32,15 @@ class Ufo01 {
         }
         if (this.LetzterSchussTick + this.Schussabstand < ticks) {
             this.LetzterSchussTick = ticks;
-            var schuss = new Laserschuss();
-            schuss.Typ = 'AlienMunition';
-            schuss.Bild.spriteMap.src = schuss.Bildquelle;
-            schuss.Ort.x = this.Ort.x
-            schuss.Ort.y = this.Ort.y + 50;
-         schuss.Geschwindigkeit.y *=-0.5;
-            return schuss;
+            
+            var r1 =[14,30]
+            var r2 =[16,30]
+
+            var s = [];
+            s.push(this.erstelleUfoschuss(this.Ort, r1));
+            s.push(this.erstelleUfoschuss(this.Ort, r2));
+
+            return s;
         }
         else{
             return null;
@@ -60,7 +62,18 @@ class Ufo01 {
             return b;
         }
     }
+    
+    erstelleUfoschuss = function (ort, korr) {
+        var ls = new Laserschuss();
+        ls.Typ = "AlienMunition";
+        ls.Bild.spriteMap.src = ls.Bildquelle;
+        ls.Ort.y = ort.y + korr[1];
+        ls.Ort.x = ort.x + korr[0];
+        ls.Geschwindigkeit.y *= -0.8;
+        return ls;
+    }
 }
+
 
 
 class Boom {
