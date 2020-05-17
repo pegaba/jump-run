@@ -40,6 +40,7 @@ var _Spieler = {
 }
 
 var _Dinge = [];
+var _zDinge = [];
 
 // welche tasten werden gehalten
 var held = { left: false, right: false, up: false, down: false, fire: false };
@@ -66,7 +67,7 @@ function ladeSpiel() {
 
 function startGame(idx) {
     console.log('starte level 0');
-    _Game.Level =  GetLevel(idx);
+    _Game.Level = GetLevel(idx);
     hideMenus();
     selectSpielerschiff(0);
     window.clearInterval(gameInterval);
@@ -74,7 +75,7 @@ function startGame(idx) {
     _Game.Status = 'running';
 }
 
-function restartGame(){
+function restartGame() {
     console.log('Restart');
     _Dinge = [];
     _Game = {
@@ -90,7 +91,7 @@ function restartGame(){
  * Diese Methode erneuert das Bild und berechnet die Positionen
  */
 function gameLoop() {
-
+    _zDinge = [];
     updateTick();
     pruefeGruppen();
 
@@ -123,7 +124,7 @@ function pruefeGruppen() {
 
     if (idx == -1) {
         var w = [];
-        if(_Game.Level.Gruppen.length == 0){
+        if (_Game.Level.Gruppen.length == 0) {
             zeigeSiegerBild();
         }
 
@@ -186,15 +187,37 @@ function bewegeSpieler() {
         }
     }
 
-    // Spieler will Rakette abschiessen
-    if(held.v){
-        if(_Spieler.Raumschiff.raketteBereit(ticks)){
-            var rakette = _Spieler.Raumschiff.schiesseRakette(_Spieler.Ort, ticks)
-            _Dinge = _Dinge.concat(rakette);
-            _Spieler.RaketteBereitTick = (ticks + _Spieler.Raumschiff.RaketteLadenZeit)
+    // Spieler will Rakete abschiessen
+    if (held.v) {
+        if (_Spieler.Raumschiff.raketeBereit(ticks)) {
+            var rakete = _Spieler.Raumschiff.schiesseRakete(_Spieler.Ort, ticks)
+            _Dinge = _Dinge.concat(rakete);
+            _Spieler.RaketeBereitTick = (ticks + _Spieler.Raumschiff.RaketeLadenZeit)
+            held.v = false;
         }
     }
 
+    // Spieler schiesst Laserstrahl
+    if (held.c && _Spieler.Raumschiff.hatLaserenergie()) {
+        _zDinge.push(() => {
+            ctx.beginPath();
+            ctx.moveTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], _Spieler.Ort.y + _Spieler.Raumschiff.LaserstrahlKorrektur[1]);
+            ctx.lineTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], 0);
+            //ctx.strokeStyle = gradient;
+            var gradient = ctx.createLinearGradient(0, 1000, 0, 0);
+            gradient.addColorStop("0", "red");
+            gradient.addColorStop("0.5", "purple");
+            gradient.addColorStop("1", "gold");
+
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 5;
+            ctx.stroke();
+        });
+
+    }
+
+
+    _Spieler.Raumschiff.pruefeStatus(ticks);
 }
 
 /**
@@ -229,7 +252,7 @@ function pruefeTreffer() {
     });
 
     // pruefe Spieler mit allen Projektilen
-    muni = _Dinge.filter((m)=> {return m.Typ == "AlienMunition"});
+    muni = _Dinge.filter((m) => { return m.Typ == "AlienMunition" });
     muni.forEach((m) => {
         IstGetroffen(m, _Spieler);
     });
@@ -309,25 +332,56 @@ function zeichneBild() {
         );
     });
 
+    _zDinge.forEach(function (z) {
+        z();
+    });
+
+    // setze Farbe zurück
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+
     // zeichne Anzeige
     // übermale Anzeigebereich weiss
     ctx.beginPath();
     ctx.rect(600, 1, 800, 800);
     ctx.fillStyle = "white";
-    ctx.fillRect(600,1,200,800);
+    ctx.fillRect(600, 1, 200, 800);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.moveTo(600, 1);
     ctx.lineTo(600, 800);
     ctx.stroke();
+    zeichneLeben();
+    zeichneLaserstrahl();
 }
-var leben = new Image();
-leben.src = "themes/galaxy/simple/images/game_tiles.png";
-ctx.drawImage(
-    leben,
-    1, 17, 16, 16, 650, 750, 25, 25
-)
+
+
+function zeichneLeben() {
+    var b = 0;
+    var v = _Spieler.Raumschiff.Lebensteile - Math.ceil(_Spieler.Raumschiff.Lebensteile * (_Spieler.Leben - 1000) / (_Spieler.Raumschiff.MaximalesLeben - 1000));
+
+
+    var leben = new Image();
+    leben.src = "themes/galaxy/simple/images/Lebensanzeige.png";
+    ctx.drawImage(
+        leben,
+        0, (v * 20), 82, 18, 620, 720, 164,36 
+    )
+
+}
+function zeichneLaserstrahl() {
+    var v = 7- Math.ceil( 7* _Spieler.Raumschiff.Laserenergie / 100);
+
+
+    var leben = new Image();
+    leben.src = "themes/galaxy/simple/images/Laserstrahl.png";
+    ctx.drawImage(
+        leben,
+        0, (v * 20), 82, 18, 620, 680, 164,36 
+    )
+
+}
 
 /**
  * wählt ein Schiff aus der Schiffliste

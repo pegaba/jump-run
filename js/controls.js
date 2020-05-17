@@ -48,10 +48,12 @@ function registerControls() {
             case 40: // down
                 held.down = true;
                 break;
-            case 86:
+            case 86:  // v
                 held.v = true;
                 break;
-
+            case 67: // c
+                held.c = true;
+                break;
 
             case 27: // escape
                 initGame()
@@ -78,6 +80,9 @@ function registerControls() {
                 break;
             case 40: // down
                 held.down = false;
+                break;
+            case 67:
+                held.c = false;
                 break;
             case 86:
                 held.v = false;
