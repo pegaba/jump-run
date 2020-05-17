@@ -132,7 +132,13 @@ function pruefeGruppen() {
         _Game.Level.Gruppen.splice(0, 1);
 
         for (var i = 0; i < w.Anzahl; i++) {
-            var u = new Ufo01();
+            if (w.Gegner == 'Ufo_01') {
+                var u = new Ufo01();
+            }
+            else if (w.Gegner == 'Boss_01') {
+                var u = new Boss01();
+            }
+
             u.Bild.spriteMap.src = u.Bildquelle;
             u.Starttick = ticks + w.Start + (i * w.Pause);
             u.WellePos = i;
@@ -198,22 +204,11 @@ function bewegeSpieler() {
     }
 
     // Spieler schiesst Laserstrahl
-    if (held.c && _Spieler.Raumschiff.hatLaserenergie()) {
-        _zDinge.push(() => {
-            ctx.beginPath();
-            ctx.moveTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], _Spieler.Ort.y + _Spieler.Raumschiff.LaserstrahlKorrektur[1]);
-            ctx.lineTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], 0);
-            //ctx.strokeStyle = gradient;
-            var gradient = ctx.createLinearGradient(0, 1000, 0, 0);
-            gradient.addColorStop("0", "red");
-            gradient.addColorStop("0.5", "purple");
-            gradient.addColorStop("1", "gold");
-
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 5;
-            ctx.stroke();
-        });
-
+    if (held.c) {
+        var l = _Spieler.Raumschiff.schiesseLaserstrahl(_Spieler.Ort);
+        if (l) {
+            _zDinge.push(l);
+        }
     }
 
 
@@ -256,6 +251,14 @@ function pruefeTreffer() {
     muni.forEach((m) => {
         IstGetroffen(m, _Spieler);
     });
+
+    strahl = _zDinge.filter((s) => { return s.Typ == 'Spielerwaffe' });
+    strahl.forEach((s) => {
+        gegn.forEach((ge) => {
+            s.trifft(ge);
+        });
+    });
+
 }
 
 function IstGetroffen(schuss, schiff) {
@@ -333,7 +336,7 @@ function zeichneBild() {
     });
 
     _zDinge.forEach(function (z) {
-        z();
+        z.zeichenFunktion(ctx);
     });
 
     // setze Farbe zurück
@@ -366,19 +369,19 @@ function zeichneLeben() {
     leben.src = "themes/galaxy/simple/images/Lebensanzeige.png";
     ctx.drawImage(
         leben,
-        0, (v * 20), 82, 18, 620, 720, 164,36 
+        0, (v * 20), 82, 18, 620, 720, 164, 36
     )
 
 }
 function zeichneLaserstrahl() {
-    var v = 7- Math.ceil( 7* _Spieler.Raumschiff.Laserenergie / 100);
+    var v = 7 - Math.ceil(7 * _Spieler.Raumschiff.Laserenergie / 100);
 
 
     var leben = new Image();
     leben.src = "themes/galaxy/simple/images/Laserstrahl.png";
     ctx.drawImage(
         leben,
-        0, (v * 20), 82, 18, 620, 680, 164,36 
+        0, (v * 20), 82, 18, 620, 680, 164, 36
     )
 
 }

@@ -14,7 +14,7 @@ var schiffe = [
         Leben: 50000,
         Lebensteile: 7,
         Laserenergie: 100,
-        LaserstrahlKorrektur: [32,1],
+        LaserstrahlKorrektur: [32, 1],
         schiessen: function (ort) {
             var r1 = [3, 21]
             var r2 = [6, 21]
@@ -29,12 +29,15 @@ var schiffe = [
 
             return s;
         },
-        hatLaserenergie: function () {
+        schiesseLaserstrahl: function (ort) {
             if (this.Laserenergie > 0) {
                 this.Laserenergie = this.Laserenergie - 1;
-                return true;
+                var ls =  new Laserstrahl();
+                ls.Ort.x = ort.x + this.LaserstrahlKorrektur[0];
+                ls.Ort.y = ort.y + this.LaserstrahlKorrektur[1];
+                return ls;
             }
-            return false;
+            return null;
         },
 
         Rohr: 1,
@@ -141,4 +144,33 @@ erstelleRakete = function (ort, korr) {
     r.Ort.y = ort.y + korr[1];
     r.Ort.x = ort.x + korr[0];
     return r;
+}
+
+class Laserstrahl {
+    Schaden = 50 // pro tick
+    Ort = { x: 0, y: 0 }
+    YRichtung = 1
+    Typ = 'Spielerwaffe'
+    zeichenFunktion = function (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], _Spieler.Ort.y + _Spieler.Raumschiff.LaserstrahlKorrektur[1]);
+        ctx.lineTo(_Spieler.Ort.x + _Spieler.Raumschiff.LaserstrahlKorrektur[0], 0);
+        //ctx.strokeStyle = gradient;
+        var gradient = ctx.createLinearGradient(0, 1000, 0, 0);
+        gradient.addColorStop("0", "red");
+        gradient.addColorStop("0.5", "purple");
+        gradient.addColorStop("1", "gold");
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 5;
+        ctx.stroke();
+    }
+    trifft = function (gegner) {
+        if (this.YRichtung > 0) {
+            if (gegner.Ort.y < this.Ort.y && gegner.Ort.x < this.Ort.x && (gegner.Ort.x + gegner.Bild.target_size.x) > this.Ort.x) {
+                gegner.getroffen(this);
+            }
+        }
+
+    }
 }

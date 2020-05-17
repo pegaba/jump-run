@@ -16,7 +16,20 @@ var levels = [
                 Anzahl: 5,
                 Start: 50,
                 Pause: 100,
-            }
+            },
+            {
+                Gegner: "Ufo_01",
+                Anzahl: 5,
+                Start: 50,
+                Pause: 100,
+            },
+            {
+                Gegner: "Boss_01",
+                Anzahl: 1,
+                Start: 80,
+                Pause: 100,
+            },
+
         ]
     }
 ];
