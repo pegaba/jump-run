@@ -10,6 +10,9 @@ var schiffe = [
         Geschwindigkeit: { x: 10, y: 10 },
         Schussabstand: 10,
         Raketenabstand: 300,
+        ZerstorerkugelLTick: 0,
+        ZerstorerkugelRTick: 0,
+        Zerstorerkugelabstand: 100,
         MaximalesLeben: 50000,
         Leben: 50000,
         Lebensteile: 7,
@@ -20,19 +23,41 @@ var schiffe = [
             var r2 = [6, 21]
             var r3 = [57, 21]
             var r4 = [60, 21]
-
+            var k1 = [13, 24]
+            var k2 = [51, 24]
             var s = []
-            s.push(erstelleschuss(ort, r1));
-            s.push(erstelleschuss(ort, r2));
-            s.push(erstelleschuss(ort, r3));
-            s.push(erstelleschuss(ort, r4));
+             s.push(erstelleschuss(ort, r1));
+             s.push(erstelleschuss(ort, r2));
+             s.push(erstelleschuss(ort, r3));
+             s.push(erstelleschuss(ort, r4));
+            if (this.ZerstorerkugelRTick < ticks) {
+                var k = new Zerstorerkugel();
+                k.Typ = 'PlayerMunition';
+                k.Bild.spriteMap.src = k.Bildquelle;
+                k.Ort.x = ort.x + k1[0];
+                k.Ort.y = ort.y + k1[1];
 
+                this.ZerstorerkugelRTick = ticks + this.Zerstorerkugelabstand;
+                this.ZerstorerkugelLTick = ticks + (0.5 * this.Zerstorerkugelabstand);
+                s.push(k);
+            }
+            if (this.ZerstorerkugelLTick < ticks) {
+                var k = new Zerstorerkugel();
+                k.Typ = 'PlayerMunition';
+                k.Bild.spriteMap.src = k.Bildquelle;
+                k.Ort.x = ort.x + k2[0];
+                k.Ort.y = ort.y + k2[1];
+
+                this.ZerstorerkugelRTick = ticks + (0.5 * this.Zerstorerkugelabstand);
+                this.ZerstorerkugelLTick = ticks + this.Zerstorerkugelabstand;
+                s.push(k);
+            }
             return s;
         },
         schiesseLaserstrahl: function (ort) {
             if (this.Laserenergie > 0) {
                 this.Laserenergie = this.Laserenergie - 1;
-                var ls =  new Laserstrahl();
+                var ls = new Laserstrahl();
                 ls.Ort.x = ort.x + this.LaserstrahlKorrektur[0];
                 ls.Ort.y = ort.y + this.LaserstrahlKorrektur[1];
                 return ls;
@@ -104,6 +129,7 @@ erstelleschuss = function (ort, korr) {
     ls.Bild.spriteMap.src = ls.Bildquelle;
     ls.Ort.y = ort.y + korr[1];
     ls.Ort.x = ort.x + korr[0];
+    ls.Schaden = 500;
 
     return ls;
 }
@@ -172,5 +198,34 @@ class Laserstrahl {
             }
         }
 
+    }
+}
+
+class Zerstorerkugel {
+    Typ = "Munition"
+    Bildquelle = 'themes/galaxy/simple/images/rllk.png'
+    Bild = {
+        spriteMap: new Image(),
+        sprite: { x: 0, y: 0 },
+        source_size: { x: 2, y: 2 },
+        target_size: { x: 7, y: 7 }
+    }
+    Ort = { x: 0, y: 0 }
+    Geschwindigkeit = { x: 0, y: -8 }
+    Schaden = 3000
+    Starttick = 0
+    Status = 0
+    bewegen = function () {
+        this.Ort.x += this.Geschwindigkeit.x;
+        this.Ort.y += this.Geschwindigkeit.y;
+    }
+    pruefeStatus = function () {
+        if (this.Ort.y < -100)
+            this.Status = -1;
+        if (this.Ort.y > 1000)
+            this.Status = -1;
+    }
+    schiessen = function () {
+        return null;
     }
 }
