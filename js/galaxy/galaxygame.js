@@ -126,7 +126,9 @@ function pruefeGruppen() {
         var w = [];
         if (_Game.Level.Gruppen.length == 0) {
             zeigeSiegerBild();
+            return;
         }
+
 
         w = _Game.Level.Gruppen[0]
         _Game.Level.Gruppen.splice(0, 1);
@@ -137,6 +139,17 @@ function pruefeGruppen() {
             }
             else if (w.Gegner == 'Boss_01') {
                 var u = new Boss01();
+                u.LaserStartTick = ticks + w.Start + (i * w.Pause) + 100;
+            } else if (w.Gegner == 'Ufo_02') {
+                var u = new Ufo02();
+                u.Ort.y = 50;
+            } else if (w.Gegner == 'Boss_02') {
+                var u = new Boss02();
+            } else if (w.Gegner == 'Ufo_03') {
+                var u = new Ufo03();
+            }
+            else if (w.Gegner == 'Boss_03') {
+                var u = new Boss_03();
             }
 
             u.Bild.spriteMap.src = u.Bildquelle;
@@ -205,9 +218,9 @@ function bewegeSpieler() {
 
     // Spieler schiesst Laserstrahl
     if (held.c) {
-        var l = _Spieler.Raumschiff.schiesseLaserstrahl(_Spieler.Ort);
-        if (l) {
-            _zDinge.push(l);
+        var l = _Spieler.Raumschiff.schiesseEnergiewaffe(_Spieler.Ort);
+        if (l && l.length > 0) {
+            _zDinge = _zDinge.concat(l);
         }
     }
 
@@ -226,6 +239,11 @@ function bewegeDinge() {
             var schuss = ding.schiessen();
             if (schuss) {
                 _Dinge = _Dinge.concat(schuss);
+            }
+
+            var energieSchuss = ding.schiesseEnergiewaffe();
+            if (energieSchuss && energieSchuss.length > 0) {
+                _zDinge = _zDinge.concat(energieSchuss);
             }
 
         }
@@ -258,6 +276,13 @@ function pruefeTreffer() {
             s.trifft(ge);
         });
     });
+
+    //AlienWaffe
+    strahl = _zDinge.filter((s) => { return s.Typ == 'AlienWaffe' });
+    strahl.forEach((s) => {
+        s.trifft(_Spieler);
+    });
+
 
 }
 

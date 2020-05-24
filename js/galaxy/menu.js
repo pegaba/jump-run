@@ -83,6 +83,8 @@ var gameover_menu = document.getElementById("game-over");
 function showGameOver() {
     hideControls()
     gameover_menu.style.visibility = "visible";
+    gameover_menu.style.display = "";
+
 }
 
 function hideGameOver() {
@@ -91,11 +93,12 @@ function hideGameOver() {
 
 var winner_menu = document.getElementById("winner-screen");
 
-function zeigeSiegerBild(){
+function zeigeSiegerBild() {
     _Game.Status = 'Sieg';
     winner_menu.style.visibility = "visible";
+    winner_menu.style.display = "";
 }
 
-function hideSiegerBild(){
+function hideSiegerBild() {
     winner_menu.style.visibility = "hidden";
 }
